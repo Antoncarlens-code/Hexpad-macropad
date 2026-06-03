@@ -11,3 +11,8 @@ desktop.ini
 cad/.venv/
 __pycache__/
 *.pyc
+
+# KiCad local/cache
+*.kicad_prl
+fp-info-cache
+*-backups/

@@ -1,0 +1,9 @@
+Ref,Qty,Part,Value/Spec,Footprint,Notes
+U1,1,Seeed Studio XIAO RP2040,RP2040 dev board,Care-package XIAO footprint (castellated),Brain. Mounted on BACK so USB-C exits the -Y edge. Built-in pull-ups.
+SW1-SW6,6,Cherry MX (or compatible) keyswitch,MX 1.00u,MX_Only_1.00u (care package),"Direct-wired, one pin each. No diodes needed (6 keys < 8)."
+ENC1,1,Alps EC11 rotary encoder w/ switch,EC11E,RotaryEncoder_Alps_EC11E-Switch_Vertical_H20mm,3 signal pins (A/B/push) + common to GND.
+-,6,MX keycaps,1u,-,Cosmetic. Match your switch stem.
+-,1,Encoder knob,for EC11 6mm D-shaft,-,Cosmetic.
+-,4,M2 machine screw,M2 x ~6mm,-,Up through case bottom into the plate's 4 corner posts (O1.7 pilot).
+-,1,USB-C cable,data-capable,-,For flashing firmware + use.
+-,0,1N4148 diode,-,Diode_THT:D_DO-35_SOD27_P7.62mm_Horizontal,NOT USED. Only needed for 8+ key matrix builds.
