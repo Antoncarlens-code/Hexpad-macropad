@@ -3,7 +3,7 @@
 Regenerates hexpad_top_plate.step and hexpad_assembly.step.
 Spec: docs/superpowers/specs/2026-06-03-top-plate-rebuild-design.md
 Run with the project venv:
-    cad\.venv\Scripts\python.exe cad\hexpad_top_plate.py
+    cad/.venv/Scripts/python.exe cad/hexpad_top_plate.py
 """
 from pathlib import Path
 from build123d import (
