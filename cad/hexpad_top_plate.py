@@ -68,6 +68,12 @@ def build_top_plate():
                 Rectangle(SWITCH_RELIEF, SWITCH_RELIEF)
         extrude(amount=SEAT_Z, mode=Mode.SUBTRACT)
 
+        # EC11 encoder hole, through plate body: SEAT_Z -> TOP_Z
+        with BuildSketch(Plane.XY.offset(SEAT_Z)):
+            with Locations(ENCODER_POS):
+                Circle(ENCODER_D / 2)
+        extrude(amount=PLATE_T, mode=Mode.SUBTRACT)
+
         # post pilot holes (M2): POST_BOTTOM_Z -> 0
         with BuildSketch(Plane.XY.offset(POST_BOTTOM_Z)):
             with Locations(*POST_LOCS):
