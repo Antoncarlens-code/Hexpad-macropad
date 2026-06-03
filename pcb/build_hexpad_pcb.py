@@ -123,7 +123,7 @@ def main():
         pad.SetLayerSet(pad.PTHMask())
         xiao.Add(pad)
     board.Add(xiao)
-    place(xiao, "U1", "XIAO-RP2040", -10.0, -24.0, rot=90, back=True)
+    place(xiao, "U1", "XIAO-RP2040", -10.0, -27.0, rot=90, back=True)
     # net map per spec section 3
     xiao_nets = {1: "SW1", 2: "SW2", 3: "SW3", 4: "SW4", 7: "SW5", 8: "SW6",
                  9: "ENCA", 10: "ENCB", 11: "ENCSW", 13: "GND"}
