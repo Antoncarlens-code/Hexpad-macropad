@@ -6,3 +6,8 @@
 Thumbs.db
 .DS_Store
 desktop.ini
+
+# Python / build123d
+cad/.venv/
+__pycache__/
+*.pyc
