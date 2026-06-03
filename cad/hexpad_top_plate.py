@@ -1,0 +1,63 @@
+"""Parametric hexpad top plate (build123d).
+
+Regenerates hexpad_top_plate.step and hexpad_assembly.step.
+Spec: docs/superpowers/specs/2026-06-03-top-plate-rebuild-design.md
+Run with the project venv:
+    cad\.venv\Scripts\python.exe cad\hexpad_top_plate.py
+"""
+from pathlib import Path
+from build123d import (
+    BuildPart, BuildSketch, Plane, Locations, Rectangle, Circle,
+    extrude, Mode, Compound, export_step, import_step,
+)
+
+CAD = Path(__file__).parent
+
+# ---- Parameters (mm) ----
+PLATE_W, PLATE_D = 76.0, 74.0
+PLATE_T = 3.0
+SEAT_Z = -1.5                       # plate bottom seats on case rim
+TOP_Z = SEAT_Z + PLATE_T            # +1.5
+CORNER_NOTCH = 3.0
+LEDGE_T = 1.5
+SWITCH_CUT = 14.0                   # top ledge opening
+SWITCH_RELIEF = 16.0               # bottom relief opening
+KEY_SPACING = 19.05
+COL_X = (-KEY_SPACING, 0.0, KEY_SPACING)
+ROW_Y = (-KEY_SPACING / 2, KEY_SPACING / 2)   # -9.525, +9.525
+ENCODER_D = 7.0
+ENCODER_POS = (0.0, 26.0)
+POST_X, POST_Y = 31.0, 31.0
+POST_D = 5.0
+POST_PILOT_D = 1.7
+POST_BOTTOM_Z = -5.0
+POST_LEN = SEAT_Z - POST_BOTTOM_Z   # 3.5
+PILOT_DEPTH = 5.0                   # from -5 up to 0
+
+KEY_LOCS = [(x, y) for y in ROW_Y for x in COL_X]
+POST_LOCS = [(POST_X, POST_Y), (-POST_X, POST_Y),
+             (POST_X, -POST_Y), (-POST_X, -POST_Y)]
+_cx = PLATE_W / 2 - CORNER_NOTCH / 2
+_cy = PLATE_D / 2 - CORNER_NOTCH / 2
+NOTCH_LOCS = [(_cx, _cy), (-_cx, _cy), (_cx, -_cy), (-_cx, -_cy)]
+
+
+def build_top_plate():
+    with BuildPart() as part:
+        # base body with corner notches: SEAT_Z -> TOP_Z
+        with BuildSketch(Plane.XY.offset(SEAT_Z)):
+            Rectangle(PLATE_W, PLATE_D)
+            with Locations(*NOTCH_LOCS):
+                Rectangle(CORNER_NOTCH, CORNER_NOTCH, mode=Mode.SUBTRACT)
+        extrude(amount=PLATE_T)
+    return part.part
+
+
+def main():
+    plate = build_top_plate()
+    export_step(plate, str(CAD / "hexpad_top_plate.step"))
+    print("exported hexpad_top_plate.step")
+
+
+if __name__ == "__main__":
+    main()
