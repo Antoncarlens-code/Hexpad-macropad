@@ -50,6 +50,18 @@ def build_top_plate():
             with Locations(*NOTCH_LOCS):
                 Rectangle(CORNER_NOTCH, CORNER_NOTCH, mode=Mode.SUBTRACT)
         extrude(amount=PLATE_T)
+
+        # corner posts under the plate: POST_BOTTOM_Z -> SEAT_Z
+        with BuildSketch(Plane.XY.offset(POST_BOTTOM_Z)):
+            with Locations(*POST_LOCS):
+                Circle(POST_D / 2)
+        extrude(amount=POST_LEN)
+
+        # post pilot holes (M2): POST_BOTTOM_Z -> 0
+        with BuildSketch(Plane.XY.offset(POST_BOTTOM_Z)):
+            with Locations(*POST_LOCS):
+                Circle(POST_PILOT_D / 2)
+        extrude(amount=PILOT_DEPTH, mode=Mode.SUBTRACT)
     return part.part
 
 
