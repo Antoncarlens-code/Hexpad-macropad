@@ -82,10 +82,18 @@ def build_top_plate():
     return part.part
 
 
+def build_assembly():
+    case = import_step(str(CAD / "hexpad_bottom_case.step"))
+    plate = import_step(str(CAD / "hexpad_top_plate.step"))
+    return Compound(label="hexpad_assembly", children=[case, plate])
+
+
 def main():
     plate = build_top_plate()
     export_step(plate, str(CAD / "hexpad_top_plate.step"))
-    print("exported hexpad_top_plate.step")
+    asm = build_assembly()
+    export_step(asm, str(CAD / "hexpad_assembly.step"))
+    print("exported hexpad_top_plate.step and hexpad_assembly.step")
 
 
 if __name__ == "__main__":
