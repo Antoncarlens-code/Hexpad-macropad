@@ -1,0 +1,8 @@
+# Slicer / print output
+*.gcode
+*.gcode.3mf
+
+# OS / editor cruft
+Thumbs.db
+.DS_Store
+desktop.ini
