@@ -57,6 +57,17 @@ def build_top_plate():
                 Circle(POST_D / 2)
         extrude(amount=POST_LEN)
 
+        # stepped MX cutouts -- 14mm snap ledge: 0 -> TOP_Z
+        with BuildSketch(Plane.XY):
+            with Locations(*KEY_LOCS):
+                Rectangle(SWITCH_CUT, SWITCH_CUT)
+        extrude(amount=TOP_Z, mode=Mode.SUBTRACT)
+        # stepped MX cutouts -- 16mm relief: 0 -> SEAT_Z
+        with BuildSketch(Plane.XY):
+            with Locations(*KEY_LOCS):
+                Rectangle(SWITCH_RELIEF, SWITCH_RELIEF)
+        extrude(amount=SEAT_Z, mode=Mode.SUBTRACT)
+
         # post pilot holes (M2): POST_BOTTOM_Z -> 0
         with BuildSketch(Plane.XY.offset(POST_BOTTOM_Z)):
             with Locations(*POST_LOCS):
