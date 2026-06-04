@@ -91,10 +91,10 @@ build123d (CAD → STEP) · KiCad 10 (PCB) · Bambu Studio (slicing) · CircuitP
 
 - [x] DRC: 0 errors, 0 unconnected (only silk + courtyard warnings) — re-plotted after branding
 - [x] "Hexpad" on the PCB silkscreen
-- [ ] "Hexpad" on the case — **not in the CAD yet** (engrave it on the top plate, or add a label)
+- [x] "Hexpad" engraved on the top plate (front margin, 0.6 mm deep) — **reprint the plate to get it physically**
 - [ ] 3D-printed parts need no supports / tolerances ~0.25 mm *(verify on your physical print)*
 - [x] PCB < 100 × 100 mm; ≤16 switches, ≤2 encoders, ≤1 OLED, ≤16 LEDs
-- [ ] README photos: render + PCB + schematic added ✓ — **case photo still needed** (`docs/images/case.png`)
+- [x] README photos: render + PCB + schematic + case (`docs/images/`)
 
 ## Build checklist
 

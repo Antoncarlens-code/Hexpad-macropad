@@ -7,7 +7,7 @@ Run with the project venv:
 """
 from pathlib import Path
 from build123d import (
-    BuildPart, BuildSketch, Plane, Locations, Rectangle, Circle,
+    BuildPart, BuildSketch, Plane, Locations, Rectangle, Circle, Text, Align,
     extrude, Mode, Compound, export_step, import_step,
 )
 
@@ -33,6 +33,10 @@ POST_PILOT_D = 1.7
 POST_BOTTOM_Z = -5.0
 POST_LEN = SEAT_Z - POST_BOTTOM_Z   # 3.5
 PILOT_DEPTH = 5.0                   # from -5 up to 0
+BRAND_TEXT = "Hexpad"
+BRAND_POS = (0.0, -28.0)            # front margin, below the key cluster
+BRAND_SIZE = 5.0                    # font height (mm)
+BRAND_DEPTH = 0.6                   # engrave depth into the top face
 
 KEY_LOCS = [(x, y) for y in ROW_Y for x in COL_X]
 POST_LOCS = [(POST_X, POST_Y), (-POST_X, POST_Y),
@@ -79,6 +83,13 @@ def build_top_plate():
             with Locations(*POST_LOCS):
                 Circle(POST_PILOT_D / 2)
         extrude(amount=PILOT_DEPTH, mode=Mode.SUBTRACT)
+
+        # engraved "Hexpad" branding, recessed into the top face (front margin)
+        with BuildSketch(Plane.XY.offset(TOP_Z)):
+            with Locations(BRAND_POS):
+                Text(BRAND_TEXT, font_size=BRAND_SIZE,
+                     align=(Align.CENTER, Align.CENTER))
+        extrude(amount=-BRAND_DEPTH, mode=Mode.SUBTRACT)
     return part.part
 
 
