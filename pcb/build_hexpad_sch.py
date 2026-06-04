@@ -10,7 +10,7 @@ Run: python pcb/build_hexpad_sch.py
 import copy, os, uuid as uuidlib
 from kiutils.schematic import Schematic
 from kiutils.symbol import SymbolLib
-from kiutils.items.schitems import SchematicSymbol, GlobalLabel, NoConnect
+from kiutils.items.schitems import SchematicSymbol, GlobalLabel, NoConnect, Connection
 from kiutils.items.common import Position, Property, Effects, Font
 
 SYM = r"C:/Program Files/KiCad/10.0/share/kicad/symbols"
@@ -75,6 +75,22 @@ def label(net, x, y, angle=0):
 def noconn(x, y):
     sch.noConnects.append(NoConnect(position=Position(x, y)))
 
+STUB = 5.08  # 200 mil wire stub so each label sits clear of its symbol
+
+def wire(x1, y1, x2, y2):
+    c = Connection(type="wire", points=[Position(g(x1), g(y1)), Position(g(x2), g(y2))])
+    c.uuid = U()
+    sch.graphicalItems.append(c)
+
+def stub_label(net, ax, ay, angle):
+    """Draw a short stub off the pin and put the global label at its far end."""
+    dx = {0: STUB, 180: -STUB}.get(angle, 0)
+    dy = {90: -STUB, 270: STUB}.get(angle, 0)
+    ex, ey = ax + dx, ay + dy
+    if dx or dy:
+        wire(ax, ay, ex, ey)
+    label(net, ex, ey, angle)
+
 def apin(sx, sy, local):  # angle 0, no mirror: abs = (x+px, y-py)
     return (sx + local[0], sy - local[1])
 
@@ -86,26 +102,26 @@ xiao_nc = [5, 6, 12, 14]
 for pn, loc in xiao_local.items():
     ax, ay = apin(ux, uy, loc)
     if pn in xiao_net:
-        label(xiao_net[pn], ax, ay, 180)
+        stub_label(xiao_net[pn], ax, ay, 180)
     elif pn in xiao_nc:
         noconn(ax, ay)
 
 # ---- switches (left column): pin1 = signal, pin2 = GND ----
 for i, net in enumerate(["SW1", "SW2", "SW3", "SW4", "SW5", "SW6"]):
     sx, sy = add_symbol("Switch", "SW_Push", f"SW{i+1}", "SW_Push", 60.96, 71.12 + i * 20.32)
-    p1 = apin(sx, sy, (-5.08, 0)); label(net, p1[0], p1[1], 180)
-    p2 = apin(sx, sy, (5.08, 0));  label("GND", p2[0], p2[1], 0)
+    p1 = apin(sx, sy, (-5.08, 0)); stub_label(net, p1[0], p1[1], 180)
+    p2 = apin(sx, sy, (5.08, 0));  stub_label("GND", p2[0], p2[1], 0)
 
 # ---- encoder (top-left) ----
 ex, ey = add_symbol("Device", "RotaryEncoder_Switch", "ENC1", "EC11", 111.76, 50.8)
 for loc, net, ang in [((-7.62, 2.54), "ENCA", 180), ((-7.62, -2.54), "ENCB", 180),
                       ((-7.62, 0.0), "GND", 180), ((7.62, 2.54), "ENCSW", 0),
                       ((7.62, -2.54), "GND", 0)]:
-    ax, ay = apin(ex, ey, loc); label(net, ax, ay, ang)
+    ax, ay = apin(ex, ey, loc); stub_label(net, ax, ay, ang)
 
 # ---- PWR_FLAG on GND ----
 px, py = add_symbol("power", "PWR_FLAG", "#FLG1", "PWR_FLAG", 190.5, 149.86)
-fx, fy = apin(px, py, (0.0, 0.0)); label("GND", fx, fy, 0)
+fx, fy = apin(px, py, (0.0, 0.0)); stub_label("GND", fx, fy, 0)
 
 # ---- mounting holes (no pins) ----
 for i, (hx, hy) in enumerate([(241.3, 40.64), (241.3, 55.88), (241.3, 71.12), (241.3, 86.36)]):
