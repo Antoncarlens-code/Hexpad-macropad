@@ -26,3 +26,6 @@ fp-info-cache
 ~*.lck
 pcb/.history/
 pcb/gerbers/
+
+# KiCad ERC/DRC reports
+*.rpt
