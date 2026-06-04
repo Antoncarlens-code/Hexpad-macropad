@@ -2884,6 +2884,17 @@
 		(layer "Edge.Cuts")
 		(uuid "23f8bb60-7cac-4d97-94cd-02d5bf737c07")
 	)
+	(gr_text "Hexpad"
+		(at 0 31 0)
+		(layer "F.SilkS")
+		(uuid "b7a1f0e2-4c3d-4a55-9f10-0000deadbeef")
+		(effects
+			(font
+				(size 2.2 2.2)
+				(thickness 0.3)
+			)
+		)
+	)
 	(segment
 		(start 0 19.54)
 		(end 0 9.525)

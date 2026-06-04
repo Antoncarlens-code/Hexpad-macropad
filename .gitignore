@@ -9,6 +9,7 @@ desktop.ini
 
 # Python / build123d
 cad/.venv/
+cad.venv/
 __pycache__/
 *.pyc
 

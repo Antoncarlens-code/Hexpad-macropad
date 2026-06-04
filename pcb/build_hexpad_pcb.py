@@ -160,6 +160,17 @@ def main():
         sps.Append(FromMM(x), FromMM(-y))
     board.Add(zone)
 
+    # ---------------------------------------------------------- branding (silk)
+    # Hackpad rule: every part must carry the hackpad's name. Front silkscreen,
+    # centered along the front edge between the two front mounting holes.
+    brand = pcbnew.PCB_TEXT(board)
+    brand.SetText("Hexpad")
+    brand.SetLayer(pcbnew.F_SilkS)
+    brand.SetPosition(xy(0.0, -31.0))
+    brand.SetTextSize(VECTOR2I(FromMM(2.2), FromMM(2.2)))
+    brand.SetTextThickness(FromMM(0.3))
+    board.Add(brand)
+
     board.BuildConnectivity()
     pcbnew.SaveBoard(OUT, board)
     print(f"saved {OUT}")
