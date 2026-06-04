@@ -1,3 +1,6 @@
+# Hackpad submission staging copy (duplicate of tracked files)
+submission/
+
 # Slicer / print output
 *.gcode
 *.gcode.3mf
