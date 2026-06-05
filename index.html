@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hexpad — interactive demo</title>
+<style>
+  :root{
+    --bg:#0e131c; --panel:#161d2b; --line:#27324a; --ink:#e8eefb;
+    --muted:#9fb0cc; --accent:#5ad1c8; --accent2:#7aa2ff; --press:#ffd166;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:radial-gradient(1200px 600px at 50% -10%,#1a2436,#0e131c);
+       color:var(--ink);font:16px/1.5 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
+  .wrap{max-width:980px;margin:0 auto;padding:32px 20px 64px}
+  header{text-align:center;margin-bottom:8px}
+  h1{font-size:34px;margin:0 0 4px;letter-spacing:.5px}
+  h1 .hx{color:var(--accent)}
+  .tag{color:var(--muted);margin:0 0 6px}
+  .pills{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:14px 0 28px}
+  .pill{background:var(--panel);border:1px solid var(--line);color:var(--muted);
+        padding:5px 11px;border-radius:999px;font-size:13px}
+  .demo{background:var(--panel);border:1px solid var(--line);border-radius:18px;
+        padding:26px;display:flex;flex-direction:column;align-items:center;gap:22px}
+  .knob-wrap{display:flex;flex-direction:column;align-items:center;gap:10px}
+  .knob{width:88px;height:88px;border-radius:50%;
+        background:radial-gradient(circle at 35% 30%,#33425f,#141d30);
+        border:2px solid var(--line);position:relative;cursor:pointer;
+        box-shadow:inset 0 4px 12px rgba(0,0,0,.5)}
+  .knob::after{content:"";position:absolute;top:8px;left:50%;width:4px;height:26px;
+        background:var(--accent);border-radius:3px;transform:translateX(-50%);transition:.15s}
+  .knob.l::after{transform:translateX(-50%) rotate(-28deg);transform-origin:50% 90%}
+  .knob.r::after{transform:translateX(-50%) rotate(28deg);transform-origin:50% 90%}
+  .enc-btns{display:flex;gap:8px}
+  .enc-btns button{background:#1b2740;border:1px solid var(--line);color:var(--ink);
+        border-radius:8px;padding:6px 12px;cursor:pointer;font-size:14px}
+  .enc-btns button:hover{border-color:var(--accent)}
+  .grid{display:grid;grid-template-columns:repeat(3,92px);gap:14px}
+  .key{height:92px;border-radius:14px;background:linear-gradient(#202c44,#18223a);
+       border:1px solid var(--line);box-shadow:0 4px 0 #0c1322,inset 0 1px 0 #38486b;
+       display:flex;flex-direction:column;align-items:center;justify-content:center;
+       cursor:pointer;user-select:none;transition:transform .05s,box-shadow .05s,border-color .12s}
+  .key .combo{font-size:13px;color:var(--accent2);font-weight:600}
+  .key .fn{font-size:15px;margin-top:3px}
+  .key:hover{border-color:var(--accent)}
+  .key.down{transform:translateY(4px);box-shadow:0 0 0 #0c1322,inset 0 2px 8px rgba(0,0,0,.6);
+       border-color:var(--press)}
+  .hint{color:var(--muted);font-size:14px;text-align:center}
+  .screen{width:100%;max-width:520px;min-height:46px;background:#0b1018;border:1px solid var(--line);
+       border-radius:10px;padding:12px 14px;font-family:ui-monospace,Menlo,Consolas,monospace;
+       color:var(--accent);text-align:center}
+  h2{margin:42px 0 14px;font-size:20px;border-bottom:1px solid var(--line);padding-bottom:8px}
+  .specs{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+  .spec{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px}
+  .spec b{display:block;color:var(--accent);font-size:13px;text-transform:uppercase;letter-spacing:.5px}
+  .gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+  .gallery figure{margin:0;background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  .gallery img{width:100%;display:block}
+  .gallery figcaption{background:var(--panel);color:var(--muted);font-size:13px;padding:8px 10px;text-align:center}
+  footer{margin-top:48px;text-align:center;color:var(--muted);font-size:14px}
+  a{color:var(--accent2)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1><span class="hx">Hex</span>pad</h1>
+    <p class="tag">A hex-shaped 6-key macropad with a rotary encoder · Seeed XIAO RP2040</p>
+    <div class="pills">
+      <span class="pill">6 keys (3×2)</span>
+      <span class="pill">EC11 encoder</span>
+      <span class="pill">Direct-wired · no diodes</span>
+      <span class="pill">2-layer 76×74 mm PCB</span>
+      <span class="pill">KMK firmware</span>
+    </div>
+  </header>
+
+  <section class="demo">
+    <div class="knob-wrap">
+      <div class="enc-btns">
+        <button onclick="enc('l')">◄ turn</button>
+        <button onclick="enc('p')">press</button>
+        <button onclick="enc('r')">turn ►</button>
+      </div>
+      <div id="knob" class="knob" title="rotary encoder"></div>
+      <div class="hint">encoder — turn for volume, press to mute</div>
+    </div>
+
+    <div class="grid" id="grid"></div>
+    <div class="hint">click a key (or press 1–6 on your keyboard) to see what it does</div>
+    <div id="screen" class="screen">— output —</div>
+  </section>
+
+  <h2>What it is</h2>
+  <p>Hexpad is a compact clipboard / editing pad with a volume knob. The six keys
+  wire straight to the XIAO RP2040's GPIO pins (no matrix, no diodes), and the EC11
+  rotary encoder handles volume. The 3D-printed plate, the PCB, and the firmware
+  were all generated from one shared coordinate spec, so everything lines up exactly.</p>
+
+  <div class="specs">
+    <div class="spec"><b>MCU</b>Seeed XIAO RP2040</div>
+    <div class="spec"><b>Inputs</b>6 switches + 1 encoder</div>
+    <div class="spec"><b>Wiring</b>Direct to GPIO, internal pull-ups</div>
+    <div class="spec"><b>PCB</b>2-layer, 76 × 74 mm</div>
+    <div class="spec"><b>Key pitch</b>19.05 mm (MX standard)</div>
+    <div class="spec"><b>Firmware</b>KMK (CircuitPython)</div>
+  </div>
+
+  <h2>The build</h2>
+  <div class="gallery">
+    <figure><img src="docs/images/render.png" alt="3D render"><figcaption>3D render</figcaption></figure>
+    <figure><img src="docs/images/schematic.png" alt="Schematic"><figcaption>Schematic</figcaption></figure>
+    <figure><img src="docs/images/pcb.png" alt="PCB layout"><figcaption>PCB</figcaption></figure>
+    <figure><img src="docs/images/case.png" alt="Printed case"><figcaption>Printed case</figcaption></figure>
+  </div>
+
+  <footer>
+    Designed with build123d (CAD) · KiCad (PCB) · KMK (firmware).<br>
+    Interactive demo — actual hardware in progress.
+  </footer>
+</div>
+
+<script>
+  const keys = [
+    {k:"Ctrl+C", fn:"Copy"},  {k:"Ctrl+V", fn:"Paste"}, {k:"Ctrl+X", fn:"Cut"},
+    {k:"Ctrl+Z", fn:"Undo"},  {k:"Ctrl+Y", fn:"Redo"},  {k:"Ctrl+S", fn:"Save"},
+  ];
+  const grid = document.getElementById('grid');
+  const screen = document.getElementById('screen');
+  keys.forEach((key,i)=>{
+    const el = document.createElement('div');
+    el.className='key'; el.dataset.i=i;
+    el.innerHTML = `<div class="combo">${key.k}</div><div class="fn">${key.fn}</div>`;
+    el.addEventListener('click',()=>fire(i));
+    grid.appendChild(el);
+  });
+  function fire(i){
+    const el = grid.children[i];
+    el.classList.add('down');
+    setTimeout(()=>el.classList.remove('down'),130);
+    screen.textContent = keys[i].k + "  →  " + keys[i].fn;
+  }
+  function enc(d){
+    const knob = document.getElementById('knob');
+    knob.classList.remove('l','r');
+    if(d==='l'){ knob.classList.add('l'); screen.textContent="🔉  Volume Down"; }
+    if(d==='r'){ knob.classList.add('r'); screen.textContent="🔊  Volume Up"; }
+    if(d==='p'){ screen.textContent="🔇  Mute"; }
+    setTimeout(()=>knob.classList.remove('l','r'),200);
+  }
+  document.addEventListener('keydown',e=>{
+    const n = parseInt(e.key,10);
+    if(n>=1 && n<=6) fire(n-1);
+  });
+</script>
+</body>
+</html>
