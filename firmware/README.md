@@ -59,6 +59,36 @@ Each switch: pin → GND, internal pull-up (press = LOW). No diodes.
 `code.py` uses the `board.D#` names, so it stays correct regardless of the
 underlying GPIO numbers.
 
+## Troubleshooting (first power-on)
+
+You can test the firmware **before** assembling the case — just flash a bare XIAO
+and briefly bridge a switch pin to a GND pin with a jumper to confirm a key fires.
+
+- **No `RPI-RP2` drive when entering the bootloader.** Use a *data* USB-C cable
+  (charge-only cables won't enumerate). Re-do the bootloader: hold **BOOT**, tap
+  **RESET**, release BOOT.
+- **`CIRCUITPY` never appears after copying the `.uf2`.** The `.uf2` didn't take —
+  re-enter the bootloader and drag it on again. Make sure you grabbed the
+  *XIAO RP2040* build, not a different board.
+- **Nothing happens after copying `code.py`.** There's an error. Open
+  `boot_out.txt` on the CIRCUITPY drive, or connect a serial console
+  (Mu editor, or `screen`/PuTTY) to see the traceback. The usual culprits:
+  - **`ImportError: cannot import name 'KeysScanner'`** — the import path moved
+    between KMK versions. Change the import in `code.py` to:
+    `from kmk.scanners import keypad` and then use `keypad.KeysScanner(...)`.
+  - **`kmk` not found** — the `kmk/` library folder isn't at the root of
+    CIRCUITPY (it must be `CIRCUITPY/kmk/...`, not nested in another folder).
+- **A single key does nothing** (others work) — almost always a cold solder joint
+  on that switch or its pin; reflow it. To rule out the firmware, bridge that
+  XIAO pin to GND by hand; if it fires, it's the joint, not the code.
+- **All keys dead, encoder works (or vice-versa)** — re-check that pin list vs.
+  the [pin map](#pin-map-matches-the-pcb) above.
+- **Encoder turns the "wrong" way** (volume down when you expect up) — swap the
+  first two entries in `encoder.map`, i.e. `(KC.VOLU, KC.VOLD, KC.MUTE)`. (Swapping
+  the A/B wires does the same thing in hardware.)
+- **Keys repeat / feel chattery** — add light debounce: `keyboard.debug_enabled`
+  off and, if needed, raise the scanner's debounce; usually not necessary on MX.
+
 ## Prefer QMK?
 
 QMK also runs on the RP2040 but needs a compile toolchain (`qmk` CLI, a
