@@ -29,3 +29,6 @@ pcb/gerbers/
 
 # KiCad ERC/DRC reports
 *.rpt
+
+# Hackpad submission staging (derived copy; assemble fresh before PR)
+/submission/
