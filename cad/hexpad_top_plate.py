@@ -27,7 +27,7 @@ COL_X = (-KEY_SPACING, 0.0, KEY_SPACING)
 ROW_Y = (-KEY_SPACING / 2, KEY_SPACING / 2)   # -9.525, +9.525
 ENCODER_D = 7.0
 ENCODER_POS = (0.0, 26.0)
-POST_X, POST_Y = 31.0, 31.0
+POST_X, POST_Y = 32.0, 31.0   # X=32 to line up with the bottom-case screw bosses
 POST_D = 5.0
 POST_PILOT_D = 1.7
 POST_BOTTOM_Z = -5.0

@@ -21,7 +21,7 @@ dimensions from the STEP geometry and rebuild the plate as a clean parametric
 build123d script. Second, rather than hand-draw the board I generated the PCB
 programmatically with KiCad's `pcbnew` API from a single coordinate spec, which
 guarantees the switch, encoder, and mounting-hole positions line up exactly with
-the printed plate (19.05 mm pitch, mounts at ±31 mm).
+the printed plate (19.05 mm pitch, mounts at ±32 × ±31 mm).
 
 ## Gallery
 

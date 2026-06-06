@@ -97,9 +97,9 @@ def main():
     for pn in ("C", "S2", "MP"):
         setnet(enc, pn, GND)
 
-    # mounting holes (mechanical, no net)
-    for ref, (x, y) in {"H1": (31, 31), "H2": (-31, 31),
-                        "H3": (31, -31), "H4": (-31, -31)}.items():
+    # mounting holes (mechanical, no net) -- X=32 to match the case screw bosses
+    for ref, (x, y) in {"H1": (32, 31), "H2": (-32, 31),
+                        "H3": (32, -31), "H4": (-32, -31)}.items():
         h = load("MountingHole.pretty", "MountingHole_2.2mm_M2")
         place(h, ref, "M2", x, y)
 

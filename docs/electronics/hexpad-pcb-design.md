@@ -90,10 +90,13 @@ Origin = plate center (same origin as the CAD). Units mm. **Front edge = −Y**
 
 | Hole | X | Y |
 |------|-------|-------|
-| H1 | +31.00 | +31.00 |
-| H2 | −31.00 | +31.00 |
-| H3 | +31.00 | −31.00 |
-| H4 | −31.00 | −31.00 |
+| H1 | +32.00 | +31.00 |
+| H2 | −32.00 | +31.00 |
+| H3 | +32.00 | −31.00 |
+| H4 | −32.00 | −31.00 |
+
+X = ±32 (not ±31) to line up with the bottom-case screw bosses, which sit at
+X ±32, Y ±31.
 
 Drill Ø2.2 mm (M2 clearance), ~4 mm pad/annular keep-out.
 
